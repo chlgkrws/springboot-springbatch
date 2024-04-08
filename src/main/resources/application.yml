@@ -29,5 +29,7 @@ spring:
       password: password
       driver-class-name: com.mysql.jdbc.Driver
   batch:
+    job:
+      enabled: false                  # 스프링 부트 살행 시 자동으로 Job을 실행시킬지 여부
     jdbc:
       initialize-schema: always       # 스프링 배치가 제공하는 스키마 SQL 사용

@@ -1,4 +1,4 @@
-package com.batch.spring.helloworld;
+package com.batch.spring.part2_basic;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -14,29 +14,27 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class HelloJobConfiguration {
+public class JobInstanceConfiguration {
 
-    private final JobBuilderFactory jobBuilderFactory;          // Job을 생성하는 빌더 팩토리
-    private final StepBuilderFactory stepBuilderFactory;        // Step을 생성하는 빌더 팩토리
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job helloJob() {
-        return jobBuilderFactory.get("helloJob")
-                .start(helloStep1())
-                .next(helloStep2())
+    public Job part2Job() {
+        return jobBuilderFactory.get("part2Job")
+                .start(part2Step1())
+                .next(part2Step2())
                 .build();
     }
 
     @Bean
-    public Step helloStep1() {
-        return stepBuilderFactory.get("helloStep1")
+    public Step part2Step1() {
+        return stepBuilderFactory.get("step1")
                 .tasklet(new Tasklet() {
                     @Override
                     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                         // 비즈니스 로직 수행
-                        System.out.println(" =====================");
-                        System.out.println(" >> Hello Spring Batch !!");
-                        System.out.println(" =====================");
+                        System.out.println(" >> Step1 was executed");
                         return RepeatStatus.FINISHED;
                     }
                 })
@@ -44,15 +42,13 @@ public class HelloJobConfiguration {
     }
 
     @Bean
-    public Step helloStep2() {
-        return stepBuilderFactory.get("helloStep2")
+    public Step part2Step2() {
+        return stepBuilderFactory.get("step2")
                 .tasklet(new Tasklet() {
                     @Override
                     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                         // 비즈니스 로직 수행
-                        System.out.println(" =====================");
                         System.out.println(" >> Step2 was executed");
-                        System.out.println(" =====================");
                         return RepeatStatus.FINISHED;
                     }
                 })
