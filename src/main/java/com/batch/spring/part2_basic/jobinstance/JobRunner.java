@@ -1,4 +1,4 @@
-package com.batch.spring.part2_basic;
+package com.batch.spring.part2_basic.jobinstance;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
  * Job Runner을 통해 직접 Job을 실행시킴
  * Job Parameter가 같으면 실행하지 않고, 다르면 실행되는 것을 확인할 수 있음
  */
-@Component
+//@Component
 @RequiredArgsConstructor
 public class JobRunner implements ApplicationRunner {
 
     private final JobLauncher jobLauncher;
 
-    private final Job part2Job;
+    private final Job job;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -28,6 +28,6 @@ public class JobRunner implements ApplicationRunner {
                 .addString("name", "user2") // user1, user2, user3 ...
                 .toJobParameters();
 
-        jobLauncher.run(part2Job, jobParameters);
+        jobLauncher.run(job, jobParameters);
     }
 }

@@ -1,7 +1,8 @@
-package com.batch.spring.part1_helloworld;
+package com.batch.spring.part2_basic.jobparameter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -12,31 +13,45 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
-@RequiredArgsConstructor
-public class HelloJobConfiguration {
+import java.util.Map;
 
-    private final JobBuilderFactory jobBuilderFactory;          // Job을 생성하는 빌더 팩토리
-    private final StepBuilderFactory stepBuilderFactory;        // Step을 생성하는 빌더 팩토리
+@Configuration
+@RequiredArgsConstructor
+public class JobParameterConfiguration {
+
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job helloJob() {
-        return jobBuilderFactory.get("helloJob")
-                .start(helloStep1())
-                .next(helloStep2())
+    public Job part2Job() {
+        return jobBuilderFactory.get("job")
+                .start(step1())
+                .next(step2())
                 .build();
     }
 
     @Bean
-    public Step helloStep1() {
-        return stepBuilderFactory.get("helloStep1")
+    public Step step1() {
+        return stepBuilderFactory.get("step1")
                 .tasklet(new Tasklet() {
                     @Override
                     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                        // 비즈니스 로직 수행
-                        System.out.println(" =====================");
-                        System.out.println(" >> Hello Spring Batch !!");
-                        System.out.println(" =====================");
+                        /**
+                         * contribution를 통한 Job Parameter에 접근하는 방법
+                         */
+                        JobParameters jobParameters = contribution.getStepExecution().getJobExecution().getJobParameters();
+                        jobParameters.getString("name");
+                        jobParameters.getLong("seq");
+                        jobParameters.getDate("date");
+                        jobParameters.getDouble("age");
+
+                        /**
+                         * chunkContext를 통한 Job Parameter에 접근하는 방법
+                         * Read 용도로 Job Parameter를 확인
+                         */
+                        Map<String, Object> jobParameters1 = chunkContext.getStepContext().getJobParameters();
+
+                        System.out.println(" >> Step1 was executed");
                         return RepeatStatus.FINISHED;
                     }
                 })
@@ -44,15 +59,13 @@ public class HelloJobConfiguration {
     }
 
     @Bean
-    public Step helloStep2() {
-        return stepBuilderFactory.get("helloStep2")
+    public Step step2() {
+        return stepBuilderFactory.get("step2")
                 .tasklet(new Tasklet() {
                     @Override
                     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                         // 비즈니스 로직 수행
-                        System.out.println(" =====================");
                         System.out.println(" >> Step2 was executed");
-                        System.out.println(" =====================");
                         return RepeatStatus.FINISHED;
                     }
                 })

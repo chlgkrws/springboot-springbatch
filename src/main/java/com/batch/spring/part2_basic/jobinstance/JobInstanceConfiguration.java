@@ -1,4 +1,4 @@
-package com.batch.spring.part2_basic;
+package com.batch.spring.part2_basic.jobinstance;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -12,7 +12,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class JobInstanceConfiguration {
 
@@ -21,14 +21,14 @@ public class JobInstanceConfiguration {
 
     @Bean
     public Job part2Job() {
-        return jobBuilderFactory.get("part2Job")
-                .start(part2Step1())
-                .next(part2Step2())
+        return jobBuilderFactory.get("job")
+                .start(step1())
+                .next(step2())
                 .build();
     }
 
     @Bean
-    public Step part2Step1() {
+    public Step step1() {
         return stepBuilderFactory.get("step1")
                 .tasklet(new Tasklet() {
                     @Override
@@ -42,7 +42,7 @@ public class JobInstanceConfiguration {
     }
 
     @Bean
-    public Step part2Step2() {
+    public Step step2() {
         return stepBuilderFactory.get("step2")
                 .tasklet(new Tasklet() {
                     @Override
